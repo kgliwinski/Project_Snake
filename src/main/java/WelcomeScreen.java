@@ -3,29 +3,29 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SnakeBoard extends JFrame {
+public class WelcomeScreen extends JFrame {
     private JPanel mainPanel;
     private JButton startANewGameButton;
     private JLabel snakeInitialLabel;
-    private JTextPane snakeBoardInitialScreenTextPane;
+    private JTextPane initialScreenInitialScreenTextPane;
 
-    public SnakeBoard() {
+    public WelcomeScreen() {
         startANewGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO When the board is created: start the game
-                JOptionPane.showMessageDialog(startANewGameButton, snakeBoardInitialScreenTextPane.getText() + "Hello");
+                JOptionPane.showMessageDialog(startANewGameButton, initialScreenInitialScreenTextPane.getText() + "Hello");
             }
         });
     }
 
     public static void main(String[] args) {
-        SnakeBoard snakeBoard = new SnakeBoard();
-        snakeBoard.setContentPane(snakeBoard.mainPanel);
-        snakeBoard.setTitle("Hello");
-        snakeBoard.setSize(300, 400);
-        snakeBoard.setVisible(true);
-        snakeBoard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        WelcomeScreen initialScreen = new WelcomeScreen();
+        initialScreen.setContentPane(initialScreen.mainPanel);
+        initialScreen.setTitle("Hello");
+        initialScreen.setSize(300, 400);
+        initialScreen.setVisible(true);
+        initialScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     {
@@ -51,9 +51,9 @@ public class SnakeBoard extends JFrame {
         snakeInitialLabel = new JLabel();
         snakeInitialLabel.setText("Hello in snake! :D");
         mainPanel.add(snakeInitialLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        snakeBoardInitialScreenTextPane = new JTextPane();
-        snakeBoardInitialScreenTextPane.setText("SnakeBoard: Initial screen");
-        mainPanel.add(snakeBoardInitialScreenTextPane, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        initialScreenInitialScreenTextPane = new JTextPane();
+        initialScreenInitialScreenTextPane.setText("WelcomeScreen: Initial screen");
+        mainPanel.add(initialScreenInitialScreenTextPane, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
