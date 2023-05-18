@@ -9,23 +9,36 @@ public class WelcomeScreen extends JFrame {
     private JLabel snakeInitialLabel;
     private JTextPane initialScreenInitialScreenTextPane;
 
+    private static WelcomeScreen initialScreen;
     public WelcomeScreen() {
+
         startANewGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO When the board is created: start the game
                 JOptionPane.showMessageDialog(startANewGameButton, initialScreenInitialScreenTextPane.getText() + "Hello");
+                changeToGameScreen();
             }
         });
     }
 
     public static void main(String[] args) {
-        WelcomeScreen initialScreen = new WelcomeScreen();
+        initialScreen = new WelcomeScreen();
         initialScreen.setContentPane(initialScreen.mainPanel);
         initialScreen.setTitle("Hello");
         initialScreen.setSize(300, 400);
         initialScreen.setVisible(true);
         initialScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private static void changeToGameScreen() {
+        GameScreen gameScreen = new GameScreen();
+//        gameScreen.setTitle("Game Screen")
+//        WelcomeScreen initialScreen = new WelcomeScreen();
+        initialScreen.getContentPane().removeAll();
+        initialScreen.setContentPane(gameScreen.getContentPane());
+        initialScreen.revalidate();
+        initialScreen.repaint();
     }
 
     {
