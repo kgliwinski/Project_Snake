@@ -1,31 +1,76 @@
+import org.w3c.dom.css.Rect;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.ArrayList;
 
-public class SnakeBoard extends JFrame {
+public class SnakeBoard extends JFrame implements KeyListener, ActionListener {
     private JPanel mainPanel;
     private JButton startANewGameButton;
     private JLabel snakeInitialLabel;
     private JTextPane snakeBoardInitialScreenTextPane;
+
+    private SnakeGame snakeGame = new SnakeGame();
 
     public SnakeBoard() {
         startANewGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO When the board is created: start the game
-                JOptionPane.showMessageDialog(startANewGameButton, snakeBoardInitialScreenTextPane.getText() + "Hello");
+                JOptionPane.showMessageDialog(startANewGameButton, snakeBoardInitialScreenTextPane.getText() + "Dupa");
             }
         });
+
+        add(snakeGame);
+//      snakeBoard.setContentPane(snakeBoard.mainPanel);
+        addKeyListener(this);
+        setTitle("Ssssssssssnake");
+        setSize(720, 720);
+        setVisible(true);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
 
     public static void main(String[] args) {
         SnakeBoard snakeBoard = new SnakeBoard();
-        snakeBoard.setContentPane(snakeBoard.mainPanel);
-        snakeBoard.setTitle("Hello");
-        snakeBoard.setSize(300, 400);
-        snakeBoard.setVisible(true);
-        snakeBoard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Timer timer = new Timer(150, snakeBoard);
+        timer.start();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        int c = e.getKeyCode();
+
+        if (c == 39 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.LEFT)) {
+            System.out.println("right");
+            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.RIGHT);
+        } else if (c == 37 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.RIGHT)) {
+            System.out.println("left");
+            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.LEFT);
+        } else if (c == 38 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.DOWN)) {
+            System.out.println("up");
+            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.UP);
+        } else if (c == 40 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.UP)) {
+            System.out.println("down");
+            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.DOWN);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // redraw the screen
+        repaint();
     }
 
     {
@@ -64,3 +109,5 @@ public class SnakeBoard extends JFrame {
     }
 
 }
+
+
