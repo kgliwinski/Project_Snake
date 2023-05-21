@@ -1,2 +1,3 @@
-public interface Figure {
-}
+//public class BaseFigure {
+//
+//}

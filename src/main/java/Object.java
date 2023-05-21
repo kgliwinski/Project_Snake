@@ -39,4 +39,9 @@ public class Object {
     public ObjectType getType() {
         return  type;
     }
+
+    static public boolean intersect(Object obj1, Object obj2) {
+        return obj1.getTopLeft_x() == obj2.getTopLeft_x() &&
+                obj1.getTopLeft_y() == obj2.getTopLeft_y();
+    }
 }

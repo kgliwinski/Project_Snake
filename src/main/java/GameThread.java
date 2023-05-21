@@ -1,3 +1,4 @@
+import javax.naming.spi.ObjectFactoryBuilder;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -5,33 +6,79 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class GameThread extends JPanel implements Runnable, KeyListener {
-//    private AISnakeThread ai_snake;
-//    private  Thread ai_snake_thread;
-//    private Thread user_snake_thread;
-//    private UserSnake user_snake;
-//    Snake snake;
-//    Snake snake_usr;
     private Snake_board board;
-    UserSnake snake_usr;
-    Thread snake_thread;
+    private UserSnake snake_usr;
+    private Thread snake_thread;
+    private FruitThread fruit;
+    private Thread fruit_thread;
+    private boolean end = false;
+
     public GameThread() {
-//        ai_snake = new AISnakeThread(200, 200, 25);
-//        user_snake = new UserSnake(100, 25, 25);
-//        ai_snake_thread = new Thread(ai_snake);
-//        user_snake_thread = new Thread(user_snake);
-//
-//        snake = ai_snake.getSnake();
-//        snake_usr = user_snake.getSnake();
         board = new Snake_board(700, 700, 25);
         snake_usr = new UserSnake(board);
         snake_thread = new Thread(snake_usr);
+        fruit = new FruitThread(board, 5000);
+        fruit_thread = new Thread(fruit);
+        fruit.addFruit();
+        fruit.addFruit();
 
         addKeyListener(this);
         setFocusable(true);
         requestFocusInWindow();
     }
 
-    public void drawSnake(Graphics g) {
+
+
+    @Override
+    public void run() {
+        snake_thread.start();
+        fruit_thread.start();
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        while (true) {
+            synchronized (board) {
+                board.notifyAll();
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            checkEating();
+
+            if (snake_usr.checkCollision()) {
+                System.out.println("END");
+                end = true;
+            }
+
+            repaint();
+        }
+    }
+
+    public void checkEating() {
+        synchronized (board) {
+            ArrayList<Object> snake = snake_usr.getBody();
+            ArrayList<Object> fruits = fruit.getFruits();
+            for (Object snake_part : snake) {
+                for (int i = 0; i < fruits.size(); ++i) {
+                    if (Object.intersect(snake_part, fruits.get(i))) {
+                        fruit.changePosition(i);
+                        snake_usr.grow();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void drawBoard(Graphics g) {
         Graphics2D graphics = (Graphics2D) g;
 
         for (Object obj: this.board.getObjects()) {
@@ -54,66 +101,17 @@ public class GameThread extends JPanel implements Runnable, KeyListener {
             }
 
             if (obj.getType() == Object.ObjectType.FRUIT) {
-                graphics.setPaint(Color.blue);
+                graphics.setPaint(Color.red);
                 graphics.drawRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 25, 25);
                 graphics.fillRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 25, 25);
             }
         }
-
-//        for (Object rec : this.snake.getBody()) {
-//            graphics.setPaint(new Color(207, 133, 133));
-//            graphics.drawRect(rec.getTopLeft_x(), rec.getTopLeft_y(), 25, 25);
-//            graphics.setPaint(new Color(207, 133, 133));
-//            graphics.fillRect(rec.getTopLeft_x(), rec.getTopLeft_y(), 25, 25);
-//        }
-//
-//        for (Object rec : this.snake_usr.getBody()) {
-//            graphics.setPaint(new Color(133, 207, 133));
-//            graphics.drawRect(rec.getTopLeft_x(), rec.getTopLeft_y(), 25, 25);
-//            graphics.setPaint(new Color(133, 207, 133));
-//            graphics.fillRect(rec.getTopLeft_x(), rec.getTopLeft_y(), 25, 25);
-//        }
     }
-
-    @Override
-    public void run() {
-        snake_thread.start();
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-//        ai_snake_thread.start();
-//        user_snake_thread.start();
-
-        while (true) {
-//            if (ai_snake.checkMove() == true) {
-//                snake = ai_snake.getSnake();
-//                System.out.println("AI snake");
-//                repaint();
-//            }
-//            if (snake_usr.checkMove() == true) {
-//            }
-            synchronized (board) {
-                board.notifyAll();
-            }
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            repaint();
-
-        }
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         setBackground(new Color(50, 50, 50));
-        drawSnake(g);
+        drawBoard(g);
     }
 
     @Override
@@ -128,19 +126,14 @@ public class GameThread extends JPanel implements Runnable, KeyListener {
     public void keyPressed(KeyEvent e) {
 
         int c = e.getKeyCode();
-        System.out.println(c);
 
         if (c == 39 && !snake_usr.getDirection().equals(Snake.SnakeMovement.LEFT)) {
-            System.out.println("right");
             this.snake_usr.setDirection(Snake.SnakeMovement.RIGHT);
         } else if (c == 37 && !snake_usr.getDirection().equals(Snake.SnakeMovement.RIGHT)) {
-            System.out.println("left");
             this.snake_usr.setDirection(Snake.SnakeMovement.LEFT);
         } else if (c == 38 && !snake_usr.getDirection().equals(Snake.SnakeMovement.DOWN)) {
-            System.out.println("up");
             this.snake_usr.setDirection(Snake.SnakeMovement.UP);
         } else if (c == 40 && !snake_usr.getDirection().equals(Snake.SnakeMovement.UP)) {
-            System.out.println("down");
             this.snake_usr.setDirection(Snake.SnakeMovement.DOWN);
         }
     }

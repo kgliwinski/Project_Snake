@@ -1,31 +1,22 @@
 public class SnakeThread extends Snake implements Runnable{
     protected volatile boolean moved;
 
-    protected Snake_board board;
-
     public SnakeThread(Snake_board board) {
-
-        super(
-                board.generatePosition_x(),
-                board.generatePosition_y(),
-                board.getGrid());
-        board.addObjects(getBody());
-        this.board = board;
+        super(board);
     }
 
     @Override
     public void run() {
-            while (true) {
-                synchronized (board) {
-                    try {
-                        board.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    move();
+        while (true) {
+            synchronized (board) {
+                try {
+                    board.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                move();
             }
-
+        }
     }
 
     public boolean checkMove() {
@@ -40,14 +31,4 @@ public class SnakeThread extends Snake implements Runnable{
             moved = true;
         }
     }
-
-//    public Snake getSnake() {
-//        Snake temp;
-//        moved = false;
-//        synchronized (snake) {
-//            temp = snake;
-//        }
-//
-//        return temp;
-//    }
 }
