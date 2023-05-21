@@ -1,12 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.security.Key;
 
-public class SnakeBoard extends JFrame {
+public class SnakeBoard extends JFrame implements KeyListener {
     private JPanel mainPanel;
     private JButton startANewGameButton;
     private JLabel snakeInitialLabel;
     private JTextPane snakeBoardInitialScreenTextPane;
+
+    private JLabel score;
+
+    private JLabel game_over;
+    GameThread game;
+    GameGUI gui;
+    Snake_board game_board;
 
     public SnakeBoard() {
         startANewGameButton.addActionListener(new ActionListener() {
@@ -17,32 +25,84 @@ public class SnakeBoard extends JFrame {
             }
         });
 
-//        setContentPane(mainPanel);
         setTitle("Ssssssssssnake");
-        setSize(720, 720);
-//        setVisible(true);
+        setSize(700, 760);
         setResizable(false);
-
+        addKeyListener(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//        addKeyListener(game);
-//        thread.start();
+        game_board = new Snake_board(700, 700, 25);
+        gui = new GameGUI(game_board, 0, 50);
+        game = new GameThread(game_board);
+
+        getContentPane().add(gui);
+        gui.setLayout(null);
+        score = new JLabel("Score");
+        score.setHorizontalAlignment(SwingConstants.LEFT);
+        score.setBounds(0, 0, 200, 50);
+        score.setForeground(Color.WHITE);
+        score.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+
+        game_over = new JLabel();
+        game_over.setHorizontalAlignment(SwingConstants.CENTER);
+        game_over.setBounds(0, 350, 700, 50);
+        game_over.setForeground(Color.WHITE);
+        game_over.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
+
+
+        gui.add(score);
+    }
+
+    public void startGame() {
+        game.start();
+        gui.redraw();
+    }
+
+    public void runGameLoop() {
+        while (game.checkEnd() == false) {
+            game.move();
+            score.setText("Score: " + Integer.toString(game.getScore()));
+            gui.redraw();
+        }
+
+        game_over.setText("GAME OVER");
+        gui.add(game_over);
     }
 
     public static void main(String[] args) {
 
         SnakeBoard board = new SnakeBoard();
-        GameThread dupa = new GameThread();
-        board.add(dupa);
+
         EventQueue.invokeLater(() -> board.setVisible(true));
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        board.startGame();
+
+        board.runGameLoop();
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        int c = e.getKeyCode();
+
+        if (c == 39 && !game.getSnakeDirection().equals(Snake.SnakeMovement.LEFT)) {
+            this.game.setSnakeDirection(Snake.SnakeMovement.RIGHT);
+        } else if (c == 37 && !game.getSnakeDirection().equals(Snake.SnakeMovement.RIGHT)) {
+            this.game.setSnakeDirection(Snake.SnakeMovement.LEFT);
+        } else if (c == 38 && !game.getSnakeDirection().equals(Snake.SnakeMovement.DOWN)) {
+            this.game.setSnakeDirection(Snake.SnakeMovement.UP);
+        } else if (c == 40 && !game.getSnakeDirection().equals(Snake.SnakeMovement.UP)) {
+            this.game.setSnakeDirection(Snake.SnakeMovement.DOWN);
         }
-        Thread thread = new Thread(dupa);
-        thread.start();
     }
 
     {

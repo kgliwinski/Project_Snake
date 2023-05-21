@@ -16,14 +16,12 @@ public class Snake_board {
     private final int board_width;
     private final int grid;
     private ArrayList<ObjectList> objects;
+
     public Snake_board(int board_height, int board_width, int grid) {
         this.board_height = board_height;
         this.board_width = board_width;
         this.grid = grid;
-        objects = new ArrayList<ObjectList>();
-        for (Object.ObjectType type : Object.ObjectType.values()) {
-            objects.add(new ObjectList(type));
-        }
+        reset();
 
     }
 
@@ -83,5 +81,12 @@ public class Snake_board {
 
     public int getHeight() {
         return board_height;
+    }
+
+    public void reset() {
+        objects = new ArrayList<ObjectList>();
+        for (Object.ObjectType type : Object.ObjectType.values()) {
+            objects.add(new ObjectList(type));
+        }
     }
 }

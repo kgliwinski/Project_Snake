@@ -5,34 +5,37 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class GameThread extends JPanel implements Runnable, KeyListener {
+public class GameThread{
     private Snake_board board;
     private UserSnake snake_usr;
     private Thread snake_thread;
     private FruitThread fruit;
     private Thread fruit_thread;
-    private boolean end = false;
+    private volatile boolean end;
 
-    public GameThread() {
-        board = new Snake_board(700, 700, 25);
+    private volatile int score;
+
+    public GameThread(Snake_board board) {
+        this.board = board;
         snake_usr = new UserSnake(board);
         snake_thread = new Thread(snake_usr);
         fruit = new FruitThread(board, 5000);
         fruit_thread = new Thread(fruit);
         fruit.addFruit();
         fruit.addFruit();
-
-        addKeyListener(this);
-        setFocusable(true);
-        requestFocusInWindow();
+        end = false;
+        score = 0;
     }
 
-
-
-    @Override
-    public void run() {
+    public void start() {
         snake_thread.start();
         fruit_thread.start();
+    }
+
+    public void move() {
+        synchronized (board) {
+            board.notifyAll();
+        }
 
         try {
             Thread.sleep(100);
@@ -40,26 +43,11 @@ public class GameThread extends JPanel implements Runnable, KeyListener {
             e.printStackTrace();
         }
 
-        while (true) {
-            synchronized (board) {
-                board.notifyAll();
-            }
+        checkEating();
+    }
 
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            checkEating();
-
-            if (snake_usr.checkCollision()) {
-                System.out.println("END");
-                end = true;
-            }
-
-            repaint();
-        }
+    public boolean checkEnd() {
+        return snake_usr.checkCollision();
     }
 
     public void checkEating() {
@@ -71,6 +59,7 @@ public class GameThread extends JPanel implements Runnable, KeyListener {
                     if (Object.intersect(snake_part, fruits.get(i))) {
                         fruit.changePosition(i);
                         snake_usr.grow();
+                        score += 1;
                         return;
                     }
                 }
@@ -78,63 +67,14 @@ public class GameThread extends JPanel implements Runnable, KeyListener {
         }
     }
 
-    public void drawBoard(Graphics g) {
-        Graphics2D graphics = (Graphics2D) g;
-
-        for (Object obj: this.board.getAllObjects()) {
-            if (obj.getType() == Object.ObjectType.FROG) {
-                graphics.setPaint(Color.green);
-                graphics.drawRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 24, 24);
-                graphics.fillRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 24, 24);
-            }
-
-            if (obj.getType() == Object.ObjectType.AI_SNAKE) {
-                graphics.setPaint(Color.blue);
-                graphics.drawRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 24, 24);
-                graphics.fillRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 24, 24);
-            }
-
-            if (obj.getType() == Object.ObjectType.USER_SNAKE) {
-                graphics.setPaint(new Color(130, 200, 130));
-                graphics.drawRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 25, 25);
-                graphics.fillRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 25, 25);
-            }
-
-            if (obj.getType() == Object.ObjectType.FRUIT) {
-                graphics.setPaint(Color.red);
-                graphics.drawRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 25, 25);
-                graphics.fillRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 25, 25);
-            }
-        }
+    public Snake.SnakeMovement getSnakeDirection() {
+        return snake_usr.getDirection();
     }
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        setBackground(new Color(50, 50, 50));
-        drawBoard(g);
+    public void setSnakeDirection(Snake.SnakeMovement direction) {
+        snake_usr.setDirection(direction);
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-        int c = e.getKeyCode();
-
-        if (c == 39 && !snake_usr.getDirection().equals(Snake.SnakeMovement.LEFT)) {
-            this.snake_usr.setDirection(Snake.SnakeMovement.RIGHT);
-        } else if (c == 37 && !snake_usr.getDirection().equals(Snake.SnakeMovement.RIGHT)) {
-            this.snake_usr.setDirection(Snake.SnakeMovement.LEFT);
-        } else if (c == 38 && !snake_usr.getDirection().equals(Snake.SnakeMovement.DOWN)) {
-            this.snake_usr.setDirection(Snake.SnakeMovement.UP);
-        } else if (c == 40 && !snake_usr.getDirection().equals(Snake.SnakeMovement.UP)) {
-            this.snake_usr.setDirection(Snake.SnakeMovement.DOWN);
-        }
+    public int getScore() {
+        return score;
     }
 }
