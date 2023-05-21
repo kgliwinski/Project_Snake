@@ -4,27 +4,31 @@ public class Snake {
     public enum SnakeMovement{
         UP, DOWN, LEFT, RIGHT
     }
-    int head_top_left_x;
-    int head_top_left_y;
     int grid_size;
     SnakeMovement direction;
-    private ArrayList<Rectangle> body = new ArrayList<Rectangle>();
-    Rectangle tail_previous_pos;
+    private ArrayList<Object> body = new ArrayList<Object>();
+    Object tail_previous_pos;
+    Object.ObjectType snake_type;
+
     public Snake(int top_left_x, int top_left_y, int grid_size) {
-        this.head_top_left_x = top_left_x;
-        this.head_top_left_y = top_left_y;
         this.grid_size = grid_size;
         direction = SnakeMovement.RIGHT;
+        snake_type = Object.ObjectType.USER_SNAKE;
 
         for (int i = 0; i < 4; ++i) {
-            body.add(new Rectangle(top_left_x - grid_size * i, top_left_y, grid_size, grid_size));
+            body.add(new Object(
+                    top_left_x - grid_size * i,
+                    top_left_y, snake_type)
+            );
         }
     }
 
     public void move() {
         // Update previous tail position
-        Rectangle tail = body.get(body.size() - 1);
-        tail_previous_pos = new Rectangle(tail.getTopLeft_x(), tail.getTopLeft_y(), grid_size, grid_size);
+        Object tail = body.get(body.size() - 1);
+        tail_previous_pos = new Object(
+                tail.getTopLeft_x(),
+                tail.getTopLeft_y(), snake_type);
 
         // Move body
         for (int i = (body.size() - 1); i > 0 ; --i) {
@@ -59,14 +63,18 @@ public class Snake {
     }
 
     public void setDirection(SnakeMovement direction) {
-        this.direction = direction;
+        synchronized (this.direction) {
+            this.direction = direction;
+        }
     }
 
     public SnakeMovement getDirection() {
-        return this.direction;
+        synchronized (this.direction) {
+            return this.direction;
+        }
     }
 
-    public ArrayList<Rectangle> getBody() {
+    public ArrayList<Object> getBody() {
         return this.body;
     }
 }

@@ -1,17 +1,12 @@
-import org.w3c.dom.css.Rect;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
-public class SnakeBoard extends JFrame implements KeyListener, ActionListener {
+public class SnakeBoard extends JFrame {
     private JPanel mainPanel;
     private JButton startANewGameButton;
     private JLabel snakeInitialLabel;
     private JTextPane snakeBoardInitialScreenTextPane;
-
-    private SnakeGame snakeGame = new SnakeGame();
 
     public SnakeBoard() {
         startANewGameButton.addActionListener(new ActionListener() {
@@ -22,55 +17,32 @@ public class SnakeBoard extends JFrame implements KeyListener, ActionListener {
             }
         });
 
-        add(snakeGame);
-//      snakeBoard.setContentPane(snakeBoard.mainPanel);
-        addKeyListener(this);
+//        setContentPane(mainPanel);
         setTitle("Ssssssssssnake");
         setSize(720, 720);
-        setVisible(true);
+//        setVisible(true);
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//        addKeyListener(game);
+//        thread.start();
+    }
 
     public static void main(String[] args) {
-        SnakeBoard snakeBoard = new SnakeBoard();
-        Timer timer = new Timer(150, snakeBoard);
-        timer.start();
-    }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
+        SnakeBoard board = new SnakeBoard();
+        GameThread dupa = new GameThread();
+        board.add(dupa);
+        EventQueue.invokeLater(() -> board.setVisible(true));
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-        int c = e.getKeyCode();
-
-        if (c == 39 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.LEFT)) {
-            System.out.println("right");
-            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.RIGHT);
-        } else if (c == 37 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.RIGHT)) {
-            System.out.println("left");
-            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.LEFT);
-        } else if (c == 38 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.DOWN)) {
-            System.out.println("up");
-            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.UP);
-        } else if (c == 40 && !snakeGame.getSnakeDirection().equals(Snake.SnakeMovement.UP)) {
-            System.out.println("down");
-            this.snakeGame.setSnakeDirection(Snake.SnakeMovement.DOWN);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // redraw the screen
-        repaint();
+        Thread thread = new Thread(dupa);
+        thread.start();
     }
 
     {

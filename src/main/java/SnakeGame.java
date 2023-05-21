@@ -1,8 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.concurrent.TimeUnit;
 
 public class SnakeGame extends JPanel {
     private Snake snake;
@@ -13,7 +10,7 @@ public class SnakeGame extends JPanel {
     public void drawSnake(Graphics g) {
         Graphics2D graphics = (Graphics2D) g;
 
-        for (Rectangle rec : this.snake.getBody()) {
+        for (Object rec : this.snake.getBody()) {
             graphics.setPaint(new Color(130, 207, 133));
             graphics.drawRect(rec.getTopLeft_x(), rec.getTopLeft_y(), 25, 25);
             graphics.setPaint(new Color(130, 207, 133));
