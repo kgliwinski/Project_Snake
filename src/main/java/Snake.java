@@ -26,7 +26,7 @@ public class Snake {
         }
 
         this.board = board;
-        board.addObjects(body);
+        this.board.addObjects(body, snake_type);
     }
 
     public void move() {
@@ -78,7 +78,7 @@ public class Snake {
     public void grow() {
         synchronized (board) {
             body.add(tail_previous_pos);
-            board.addObject(body.get(body.size() - 1));
+            board.addObject(body.get(body.size() - 1), snake_type);
         }
     }
 

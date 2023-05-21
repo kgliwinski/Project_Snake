@@ -64,8 +64,8 @@ public class GameThread extends JPanel implements Runnable, KeyListener {
 
     public void checkEating() {
         synchronized (board) {
-            ArrayList<Object> snake = snake_usr.getBody();
-            ArrayList<Object> fruits = fruit.getFruits();
+            ArrayList<Object> snake = board.getObjects(Object.ObjectType.USER_SNAKE);
+            ArrayList<Object> fruits = board.getObjects(Object.ObjectType.FRUIT);
             for (Object snake_part : snake) {
                 for (int i = 0; i < fruits.size(); ++i) {
                     if (Object.intersect(snake_part, fruits.get(i))) {
@@ -81,7 +81,7 @@ public class GameThread extends JPanel implements Runnable, KeyListener {
     public void drawBoard(Graphics g) {
         Graphics2D graphics = (Graphics2D) g;
 
-        for (Object obj: this.board.getObjects()) {
+        for (Object obj: this.board.getAllObjects()) {
             if (obj.getType() == Object.ObjectType.FROG) {
                 graphics.setPaint(Color.green);
                 graphics.drawRect(obj.getTopLeft_x(), obj.getTopLeft_y(), 24, 24);

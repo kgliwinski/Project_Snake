@@ -13,7 +13,7 @@ public class Fruit {
                 type
         ));
 
-        board.addObjects(objects);
+        board.addObjects(objects, type);
         this.board = board;
     }
 
@@ -23,7 +23,7 @@ public class Fruit {
                 board.generatePosition_y(),
                 type
         ));
-        board.addObject(objects.get(objects.size() - 1));
+        board.addObject(objects.get(objects.size() - 1), type);
     }
 
     public void changePosition(int index) {

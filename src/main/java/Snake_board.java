@@ -1,48 +1,80 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Snake_board {
-    private int board_height;
-    private int board_width;
-    private int grid;
-    private ArrayList<Object> objects;
+    private class ObjectList {
+        public ArrayList<Object> objects;
+        public Object.ObjectType type;
+
+        public ObjectList(Object.ObjectType type) {
+            this.objects = new ArrayList<>();
+            this.type = type;
+        }
+    }
+    private final int board_height;
+    private final int board_width;
+    private final int grid;
+    private ArrayList<ObjectList> objects;
     public Snake_board(int board_height, int board_width, int grid) {
         this.board_height = board_height;
         this.board_width = board_width;
         this.grid = grid;
-        objects = new ArrayList<Object>();
+        objects = new ArrayList<ObjectList>();
+        for (Object.ObjectType type : Object.ObjectType.values()) {
+            objects.add(new ObjectList(type));
+        }
+
     }
 
     public int generatePosition_x() {
         Random rand = new Random();
         int new_x = rand.nextInt(board_height / grid) * grid;
-//        System.out.printf("Generated x %d\n", new_x);
         return  new_x;
     }
 
     public int generatePosition_y() {
         Random rand = new Random();
         int new_y = rand.nextInt(board_width/ grid) * grid;
-//        System.out.printf("Generated y %d\n", new_y);
         return  new_y;
     }
-    public void addObjects(ArrayList<Object> objects) {
-        synchronized (this.objects) {
-            this.objects.addAll(objects);
+    public synchronized void addObjects(ArrayList<Object> objects, Object.ObjectType type) {
+        for (ObjectList obj : this.objects) {
+            if (obj.type == type) {
+                obj.objects.addAll(objects);
+            }
         }
     }
 
-    public void addObject(Object objects) {
-        synchronized (this.objects) {
-            this.objects.add(objects);
+    public synchronized void addObject(Object object, Object.ObjectType type) {
+        for (ObjectList obj : this.objects) {
+            if (obj.type == type) {
+                obj.objects.add(object);
+            }
         }
     }
+
+    public synchronized ArrayList<Object> getObjects(Object.ObjectType type) {
+        for (ObjectList obj : this.objects) {
+            if (obj.type == type) {
+                return obj.objects;
+            }
+        }
+
+        throw new RuntimeException("Invalid type");
+    }
+
+    public synchronized ArrayList<Object> getAllObjects() {
+        ArrayList<Object> temp = new ArrayList<>();
+        for (ObjectList obj : this.objects) {
+            temp.addAll(obj.objects);
+        }
+
+        return temp;
+    }
+
     public int getGrid() {
         return grid;
-    }
-
-    public ArrayList<Object> getObjects() {
-        return  this.objects;
     }
 
     public int getWidth() {
