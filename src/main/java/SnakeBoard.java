@@ -16,6 +16,8 @@ public class SnakeBoard extends JFrame implements KeyListener {
     GameGUI gui;
     Snake_board game_board;
 
+    private volatile boolean restart_clicked;
+
     public SnakeBoard() {
         startANewGameButton.addActionListener(new ActionListener() {
             @Override
@@ -26,13 +28,13 @@ public class SnakeBoard extends JFrame implements KeyListener {
         });
 
         setTitle("Ssssssssssnake");
-        setSize(700, 760);
+        setSize(700, 750);
         setResizable(false);
         addKeyListener(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        game_board = new Snake_board(700, 700, 25);
-        gui = new GameGUI(game_board, 0, 50);
+        game_board = new Snake_board(650, 650, 25);
+        gui = new GameGUI(game_board, 15, 50);
         game = new GameThread(game_board);
 
         getContentPane().add(gui);
@@ -45,10 +47,9 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
         game_over = new JLabel();
         game_over.setHorizontalAlignment(SwingConstants.CENTER);
-        game_over.setBounds(0, 350, 700, 50);
+        game_over.setBounds(0, 100, 700, 50);
         game_over.setForeground(Color.WHITE);
         game_over.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
-
 
         gui.add(score);
     }
@@ -59,14 +60,24 @@ public class SnakeBoard extends JFrame implements KeyListener {
     }
 
     public void runGameLoop() {
-        while (game.checkEnd() == false) {
+        while (true) {
             game.move();
             score.setText("Score: " + Integer.toString(game.getScore()));
+            if (game.checkEnd() == true) {
+                game_over.setText("GAME OVER");
+                gui.add(game_over);
+                gui.redraw();
+                restart_clicked = false;
+                while (restart_clicked == false) {
+
+                }
+                gui.remove(game_over);
+                gui.redraw();
+                break;
+//                game_board.reset();
+            }
             gui.redraw();
         }
-
-        game_over.setText("GAME OVER");
-        gui.add(game_over);
     }
 
     public static void main(String[] args) {
@@ -94,7 +105,9 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
         int c = e.getKeyCode();
 
-        if (c == 39 && !game.getSnakeDirection().equals(Snake.SnakeMovement.LEFT)) {
+        if (c == 32) {
+            restart_clicked = true;
+        } else if (c == 39 && !game.getSnakeDirection().equals(Snake.SnakeMovement.LEFT)) {
             this.game.setSnakeDirection(Snake.SnakeMovement.RIGHT);
         } else if (c == 37 && !game.getSnakeDirection().equals(Snake.SnakeMovement.RIGHT)) {
             this.game.setSnakeDirection(Snake.SnakeMovement.LEFT);

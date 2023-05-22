@@ -11,6 +11,7 @@ public class GameGUI extends JPanel {
         this.grid = board.getGrid();
         this.position_x = position_x;
         this.position_y = position_y;
+        setBackground(new Color(50, 50, 50));
     }
 
     public void redraw() {
@@ -31,7 +32,19 @@ public class GameGUI extends JPanel {
                     position_y - i ,
                     board.getWidth() + position_x,
                     position_y - i);
+            graphics.drawLine(
+                    position_x - i,
+                    position_y - 4,
+                    position_x - i,
+                    position_y + board.getHeight() + 4);
+            graphics.drawLine(
+                    position_x + board.getWidth() + i,
+                    position_y - 4,
+                    position_x + board.getWidth() + i,
+                    position_y + board.getHeight() + 4);
         }
+        graphics.setPaint(new Color(70, 70, 50));
+        graphics.fillRect(position_x, position_y, board.getWidth(), board.getHeight());
 
         for (Object obj: this.board.getAllObjects()) {
             if (obj.getType() == Object.ObjectType.FROG) {
@@ -50,6 +63,10 @@ public class GameGUI extends JPanel {
                 graphics.setPaint(Color.red);
             }
 
+            if (obj.getType() == Object.ObjectType.OBSTACLE) {
+                graphics.setPaint(Color.black);
+            }
+
             graphics.drawRect(
                     obj.getTopLeft_x() + position_x,
                     obj.getTopLeft_y() + position_y,
@@ -64,7 +81,6 @@ public class GameGUI extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(new Color(50, 50, 50));
         drawGame(g);
     }
 }

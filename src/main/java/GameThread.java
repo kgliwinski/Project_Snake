@@ -11,8 +11,6 @@ public class GameThread{
     private Thread snake_thread;
     private FruitThread fruit;
     private Thread fruit_thread;
-    private volatile boolean end;
-
     private volatile int score;
 
     public GameThread(Snake_board board) {
@@ -23,7 +21,8 @@ public class GameThread{
         fruit_thread = new Thread(fruit);
         fruit.addFruit();
         fruit.addFruit();
-        end = false;
+        Obstacle.generateObstacle(board);
+        Obstacle.generateObstacle(board);
         score = 0;
     }
 
@@ -43,28 +42,38 @@ public class GameThread{
             e.printStackTrace();
         }
 
-        checkEating();
+        checkUserSnakeEating();
     }
 
     public boolean checkEnd() {
+        if (checkCollisionWithObstacle() == true) {
+            return  true;
+        }
         return snake_usr.checkCollision();
     }
 
-    public void checkEating() {
-        synchronized (board) {
-            ArrayList<Object> snake = board.getObjects(Object.ObjectType.USER_SNAKE);
-            ArrayList<Object> fruits = board.getObjects(Object.ObjectType.FRUIT);
-            for (Object snake_part : snake) {
-                for (int i = 0; i < fruits.size(); ++i) {
-                    if (Object.intersect(snake_part, fruits.get(i))) {
-                        fruit.changePosition(i);
-                        snake_usr.grow();
-                        score += 1;
-                        return;
-                    }
-                }
+    private synchronized void checkUserSnakeEating() {
+        Object snake_head = board.getObjects(Object.ObjectType.USER_SNAKE).get(0);
+        ArrayList<Object> fruits = board.getObjects(Object.ObjectType.FRUIT);
+        for (int i = 0; i < fruits.size(); ++i) {
+            if (Object.intersect(snake_head, fruits.get(i))) {
+                fruit.changePosition(i);
+                snake_usr.grow();
+                score += 1;
+                return;
             }
         }
+    }
+
+    private synchronized boolean checkCollisionWithObstacle() {
+        Object snake_head = board.getObjects(Object.ObjectType.USER_SNAKE).get(0);
+        ArrayList<Object> obstacle_objects = board.getObjects(Object.ObjectType.OBSTACLE);
+        for (Object obj : obstacle_objects) {
+            if (Object.intersect(obj, snake_head)) {
+                return true;
+            }
+        }
+        return  false;
     }
 
     public Snake.SnakeMovement getSnakeDirection() {

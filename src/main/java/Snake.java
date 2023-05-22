@@ -15,8 +15,8 @@ public class Snake {
         snake_type = Object.ObjectType.USER_SNAKE;
         direction = SnakeMovement.RIGHT;
 
-        int top_left_x = board.generatePosition_x();
-        int top_left_y = board.generatePosition_y();
+        int top_left_x = board.generateSnakeStart_x();
+        int top_left_y = board.generateSnakeStart_y();
         this.grid_size = board.getGrid();
         for (int i = 0; i < 4; ++i) {
             body.add(new Object(

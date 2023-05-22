@@ -3,7 +3,8 @@ public class Object {
         USER_SNAKE,
         AI_SNAKE,
         FRUIT,
-        FROG
+        FROG,
+        OBSTACLE,
     }
     protected int top_left_x;
     protected int top_left_y;

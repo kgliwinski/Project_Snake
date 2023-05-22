@@ -25,16 +25,62 @@ public class Snake_board {
 
     }
 
-    public int generatePosition_x() {
-        Random rand = new Random();
-        int new_x = rand.nextInt(board_height / grid) * grid;
-        return  new_x;
+    private boolean checkCollision_x(ArrayList<Object> objects, int x) {
+        for (Object obj : objects ) {
+            if (obj.getTopLeft_x() == x) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public int generatePosition_y() {
+    public int generatePosition_x() {
         Random rand = new Random();
+        ArrayList<Object> objects = getAllObjects();
+
+        int new_x = rand.nextInt(board_height / grid) * grid;
+        while (checkCollision_y(objects, new_x) == true) {
+            new_x += grid;
+
+            if (new_x >= board_width) {
+                new_x = 0;
+            }
+        }
+
+        return  new_x;
+    }
+    private boolean checkCollision_y(ArrayList<Object> objects, int y) {
+        for (Object obj : objects ) {
+            if (obj.getTopLeft_y() == y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int generateSnakeStart_x() {
+        return board_width/2;
+    }
+
+    public int generateSnakeStart_y() {
+        return board_height/2;
+    }
+    public synchronized int generatePosition_y() {
+        Random rand = new Random();
+        ArrayList<Object> objects = getAllObjects();
+
         int new_y = rand.nextInt(board_width/ grid) * grid;
-        return  new_y;
+        while (checkCollision_y(objects, new_y) == true) {
+            new_y += grid;
+
+            if (new_y >= board_width) {
+                new_y = 0;
+            }
+        }
+
+        return new_y;
     }
     public synchronized void addObjects(ArrayList<Object> objects, Object.ObjectType type) {
         for (ObjectList obj : this.objects) {
