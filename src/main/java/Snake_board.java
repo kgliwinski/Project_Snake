@@ -1,14 +1,13 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Snake_board {
+public class Snake_board implements GameBaseObject {
     private class ObjectList {
-        public ArrayList<Object> objects;
-        public Object.ObjectType type;
+        public ArrayList<BoardElement> boardElements;
+        public BoardElement.Type type;
 
-        public ObjectList(Object.ObjectType type) {
-            this.objects = new ArrayList<>();
+        public ObjectList(BoardElement.Type type) {
+            this.boardElements = new ArrayList<>();
             this.type = type;
         }
     }
@@ -21,12 +20,12 @@ public class Snake_board {
         this.board_height = board_height;
         this.board_width = board_width;
         this.grid = grid;
-        reset();
+        restart();
 
     }
 
-    private boolean checkCollision_x(ArrayList<Object> objects, int x) {
-        for (Object obj : objects ) {
+    private boolean checkCollision_x(ArrayList<BoardElement> boardElements, int x) {
+        for (BoardElement obj : boardElements) {
             if (obj.getTopLeft_x() == x) {
                 return true;
             }
@@ -37,10 +36,10 @@ public class Snake_board {
 
     public int generatePosition_x() {
         Random rand = new Random();
-        ArrayList<Object> objects = getAllObjects();
+        ArrayList<BoardElement> boardElements = getAllObjects();
 
         int new_x = rand.nextInt(board_height / grid) * grid;
-        while (checkCollision_y(objects, new_x) == true) {
+        while (checkCollision_y(boardElements, new_x) == true) {
             new_x += grid;
 
             if (new_x >= board_width) {
@@ -50,8 +49,8 @@ public class Snake_board {
 
         return  new_x;
     }
-    private boolean checkCollision_y(ArrayList<Object> objects, int y) {
-        for (Object obj : objects ) {
+    private boolean checkCollision_y(ArrayList<BoardElement> boardElements, int y) {
+        for (BoardElement obj : boardElements) {
             if (obj.getTopLeft_y() == y) {
                 return true;
             }
@@ -69,10 +68,10 @@ public class Snake_board {
     }
     public synchronized int generatePosition_y() {
         Random rand = new Random();
-        ArrayList<Object> objects = getAllObjects();
+        ArrayList<BoardElement> boardElements = getAllObjects();
 
         int new_y = rand.nextInt(board_width/ grid) * grid;
-        while (checkCollision_y(objects, new_y) == true) {
+        while (checkCollision_y(boardElements, new_y) == true) {
             new_y += grid;
 
             if (new_y >= board_width) {
@@ -82,36 +81,36 @@ public class Snake_board {
 
         return new_y;
     }
-    public synchronized void addObjects(ArrayList<Object> objects, Object.ObjectType type) {
+    public synchronized void addObjects(ArrayList<BoardElement> boardElements, BoardElement.Type type) {
         for (ObjectList obj : this.objects) {
             if (obj.type == type) {
-                obj.objects.addAll(objects);
+                obj.boardElements.addAll(boardElements);
             }
         }
     }
 
-    public synchronized void addObject(Object object, Object.ObjectType type) {
+    public synchronized void addObject(BoardElement boardElement, BoardElement.Type type) {
         for (ObjectList obj : this.objects) {
             if (obj.type == type) {
-                obj.objects.add(object);
+                obj.boardElements.add(boardElement);
             }
         }
     }
 
-    public synchronized ArrayList<Object> getObjects(Object.ObjectType type) {
+    public synchronized ArrayList<BoardElement> getObjects(BoardElement.Type type) {
         for (ObjectList obj : this.objects) {
             if (obj.type == type) {
-                return obj.objects;
+                return obj.boardElements;
             }
         }
 
         throw new RuntimeException("Invalid type");
     }
 
-    public synchronized ArrayList<Object> getAllObjects() {
-        ArrayList<Object> temp = new ArrayList<>();
+    public synchronized ArrayList<BoardElement> getAllObjects() {
+        ArrayList<BoardElement> temp = new ArrayList<>();
         for (ObjectList obj : this.objects) {
-            temp.addAll(obj.objects);
+            temp.addAll(obj.boardElements);
         }
 
         return temp;
@@ -129,9 +128,10 @@ public class Snake_board {
         return board_height;
     }
 
-    public void reset() {
+    @Override
+    public void restart() {
         objects = new ArrayList<ObjectList>();
-        for (Object.ObjectType type : Object.ObjectType.values()) {
+        for (BoardElement.Type type : BoardElement.Type.values()) {
             objects.add(new ObjectList(type));
         }
     }

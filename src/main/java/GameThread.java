@@ -1,15 +1,10 @@
-import javax.naming.spi.ObjectFactoryBuilder;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class GameThread{
     private Snake_board board;
     private UserSnake snake_usr;
     private Thread snake_thread;
-    private FruitThread fruit;
+    private FruitsThread fruit;
     private Thread fruit_thread;
     private volatile int score;
 
@@ -17,10 +12,8 @@ public class GameThread{
         this.board = board;
         snake_usr = new UserSnake(board);
         snake_thread = new Thread(snake_usr);
-        fruit = new FruitThread(board, 5000);
+        fruit = new FruitsThread(board, 3,5000);
         fruit_thread = new Thread(fruit);
-        fruit.addFruit();
-        fruit.addFruit();
         Obstacle.generateObstacle(board);
         Obstacle.generateObstacle(board);
         score = 0;
@@ -53,10 +46,10 @@ public class GameThread{
     }
 
     private synchronized void checkUserSnakeEating() {
-        Object snake_head = board.getObjects(Object.ObjectType.USER_SNAKE).get(0);
-        ArrayList<Object> fruits = board.getObjects(Object.ObjectType.FRUIT);
+        BoardElement snake_head = board.getObjects(BoardElement.Type.USER_SNAKE).get(0);
+        ArrayList<BoardElement> fruits = board.getObjects(BoardElement.Type.FRUIT);
         for (int i = 0; i < fruits.size(); ++i) {
-            if (Object.intersect(snake_head, fruits.get(i))) {
+            if (BoardElement.intersect(snake_head, fruits.get(i))) {
                 fruit.changePosition(i);
                 snake_usr.grow();
                 score += 1;
@@ -66,10 +59,10 @@ public class GameThread{
     }
 
     private synchronized boolean checkCollisionWithObstacle() {
-        Object snake_head = board.getObjects(Object.ObjectType.USER_SNAKE).get(0);
-        ArrayList<Object> obstacle_objects = board.getObjects(Object.ObjectType.OBSTACLE);
-        for (Object obj : obstacle_objects) {
-            if (Object.intersect(obj, snake_head)) {
+        BoardElement snake_head = board.getObjects(BoardElement.Type.USER_SNAKE).get(0);
+        ArrayList<BoardElement> obstacle_boardElements = board.getObjects(BoardElement.Type.OBSTACLE);
+        for (BoardElement obj : obstacle_boardElements) {
+            if (BoardElement.intersect(obj, snake_head)) {
                 return true;
             }
         }
@@ -85,5 +78,15 @@ public class GameThread{
 
     public int getScore() {
         return score;
+    }
+
+    public void restartGame() {
+        board.restart();
+        snake_usr.restart();
+        fruit.restart();
+
+        Obstacle.generateObstacle(board);
+        Obstacle.generateObstacle(board);
+        score = 0;
     }
 }

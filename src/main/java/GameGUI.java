@@ -46,24 +46,24 @@ public class GameGUI extends JPanel {
         graphics.setPaint(new Color(70, 70, 50));
         graphics.fillRect(position_x, position_y, board.getWidth(), board.getHeight());
 
-        for (Object obj: this.board.getAllObjects()) {
-            if (obj.getType() == Object.ObjectType.FROG) {
+        for (BoardElement obj: this.board.getAllObjects()) {
+            if (obj.getType() == BoardElement.Type.FROG) {
                 graphics.setPaint(Color.green);
             }
 
-            if (obj.getType() == Object.ObjectType.AI_SNAKE) {
+            if (obj.getType() == BoardElement.Type.AI_SNAKE) {
                 graphics.setPaint(Color.blue);
             }
 
-            if (obj.getType() == Object.ObjectType.USER_SNAKE) {
+            if (obj.getType() == BoardElement.Type.USER_SNAKE) {
                 graphics.setPaint(new Color(130, 200, 130));
             }
 
-            if (obj.getType() == Object.ObjectType.FRUIT) {
+            if (obj.getType() == BoardElement.Type.FRUIT) {
                 graphics.setPaint(Color.red);
             }
 
-            if (obj.getType() == Object.ObjectType.OBSTACLE) {
+            if (obj.getType() == BoardElement.Type.OBSTACLE) {
                 graphics.setPaint(Color.black);
             }
 

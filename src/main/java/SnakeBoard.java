@@ -69,12 +69,10 @@ public class SnakeBoard extends JFrame implements KeyListener {
                 gui.redraw();
                 restart_clicked = false;
                 while (restart_clicked == false) {
-
                 }
                 gui.remove(game_over);
                 gui.redraw();
-                break;
-//                game_board.reset();
+                game.restartGame();
             }
             gui.redraw();
         }

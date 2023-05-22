@@ -1,16 +1,17 @@
 import java.util.ArrayList;
-import java.util.List;
 
-public class FruitThread extends Fruit implements Runnable{
+public class FruitsThread extends Fruits implements Runnable{
     private int change_position_time;
     private ArrayList<Long> timers_start_time;
-    public FruitThread(Snake_board board, int change_position_time) {
-        super(board);
-        timers_start_time = new ArrayList<Long>();
-        long time = System.currentTimeMillis();;
-        timers_start_time.add(time);
-
+    public FruitsThread(Snake_board board, int number_of_fruits, int change_position_time) {
+        super(board, number_of_fruits);
         this.change_position_time = change_position_time;
+
+        timers_start_time = new ArrayList<Long>();
+
+        for (int i = 0; i < number_of_fruits; ++i) {
+            timers_start_time.add(new Long(System.currentTimeMillis()));
+        }
     }
 
     @Override
@@ -49,5 +50,15 @@ public class FruitThread extends Fruit implements Runnable{
     public void changePosition(int index) {
         super.changePosition(index);
         timers_start_time.set(index, System.currentTimeMillis());
+    }
+
+    @Override
+    public void restart() {
+        super.restart();
+        timers_start_time = new ArrayList<Long>();
+
+        for (int i = 0; i < number_of_fruits; ++i) {
+            timers_start_time.add(new Long(System.currentTimeMillis()));
+        }
     }
 }

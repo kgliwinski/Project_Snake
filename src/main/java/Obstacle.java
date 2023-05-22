@@ -3,11 +3,11 @@ import java.util.Random;
 
 public class Obstacle {
 //    public Obstacle(Snake_board board) {
-//        board.addObjects(generateObstacle(board), Object.ObjectType.OBSTACLE);
+//        board.addObjects(generateObstacle(board), Object.Type.OBSTACLE);
 //    }
 
     static public void generateObstacle(Snake_board board) {
-        ArrayList<Object> obstacle = new ArrayList<>();
+        ArrayList<BoardElement> obstacle = new ArrayList<>();
         Random rand = new Random();
         int type = rand.nextInt(2);
         switch (type) {
@@ -18,21 +18,22 @@ public class Obstacle {
                 generateLShape(board, obstacle);
                 break;
         }
-        board.addObjects(obstacle, Object.ObjectType.OBSTACLE);
+        board.addObjects(obstacle, BoardElement.Type.OBSTACLE);
     }
 
-    static private void generateLineShape(Snake_board board, ArrayList<Object> obstacle) {
+    static private void generateLineShape(Snake_board board, ArrayList<BoardElement> obstacle) {
         Random rand = new Random();
         int grid = board.getGrid();
         int board_width = board.getWidth();
         int board_height = board.getHeight();
 
         int x = board.generatePosition_x();
-        if (x == board.generateSnakeStart_x()) {
-            x += grid * 2;
-        }
         int y = board.generatePosition_y();
-        obstacle.add(new Object(x, y, Object.ObjectType.OBSTACLE));
+
+        if (x == board.generateSnakeStart_x()) {
+            y += grid * 2;
+        }
+        obstacle.add(new BoardElement(x, y, BoardElement.Type.OBSTACLE));
 
         int direction = rand.nextInt(2);
 
@@ -51,22 +52,23 @@ public class Obstacle {
                 y = 0;
             }
 
-            obstacle.add(new Object(x, y, Object.ObjectType.OBSTACLE));
+            obstacle.add(new BoardElement(x, y, BoardElement.Type.OBSTACLE));
         }
     }
 
-    static private void generateLShape(Snake_board board, ArrayList<Object> obstacle) {
+    static private void generateLShape(Snake_board board, ArrayList<BoardElement> obstacle) {
         Random rand = new Random();
         int grid = board.getGrid();
         int board_width = board.getWidth();
         int board_height = board.getHeight();
 
         int x = board.generatePosition_x();
-        if (x == board.generateSnakeStart_x()) {
-            x += grid * 2;
-        }
         int y = board.generatePosition_y();
-        obstacle.add(new Object(x, y, Object.ObjectType.OBSTACLE));
+
+        if (x == board.generateSnakeStart_x()) {
+            y += grid * 2;
+        }
+        obstacle.add(new BoardElement(x, y, BoardElement.Type.OBSTACLE));
 
         int direction = rand.nextInt(2);
         int size = board_width / grid / 4;
@@ -94,7 +96,7 @@ public class Obstacle {
                 y = 0;
             }
 
-            obstacle.add(new Object(x, y, Object.ObjectType.OBSTACLE));
+            obstacle.add(new BoardElement(x, y, BoardElement.Type.OBSTACLE));
         }
     }
 }

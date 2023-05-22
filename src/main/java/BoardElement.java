@@ -1,5 +1,5 @@
-public class Object {
-    public enum ObjectType{
+public class BoardElement {
+    public enum Type{
         USER_SNAKE,
         AI_SNAKE,
         FRUIT,
@@ -8,16 +8,16 @@ public class Object {
     }
     protected int top_left_x;
     protected int top_left_y;
-    protected ObjectType type;
+    protected Type type;
 
-    public Object(int top_left_x, int top_left_y, ObjectType type) {
+    public BoardElement(int top_left_x, int top_left_y, Type type) {
         this.top_left_x = top_left_x;
         this.top_left_y = top_left_y;
         this.type = type;
     }
 
-    public boolean intersects(Object object) {
-        return  this.top_left_x == object.top_left_x && this.top_left_y == object.top_left_y;
+    public boolean intersects(BoardElement boardElement) {
+        return  this.top_left_x == boardElement.top_left_x && this.top_left_y == boardElement.top_left_y;
     }
 
     public int getTopLeft_x() {
@@ -37,11 +37,11 @@ public class Object {
         this.top_left_y = y;
     }
 
-    public ObjectType getType() {
+    public Type getType() {
         return  type;
     }
 
-    static public boolean intersect(Object obj1, Object obj2) {
+    static public boolean intersect(BoardElement obj1, BoardElement obj2) {
         return obj1.getTopLeft_x() == obj2.getTopLeft_x() &&
                 obj1.getTopLeft_y() == obj2.getTopLeft_y();
     }

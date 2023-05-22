@@ -1,38 +1,27 @@
 import java.util.ArrayList;
 
-public class Snake {
+public class Snake implements GameBaseObject{
     public enum SnakeMovement{
         UP, DOWN, LEFT, RIGHT
     }
     int grid_size;
     SnakeMovement direction;
-    private ArrayList<Object> body = new ArrayList<Object>();
-    Object tail_previous_pos;
-    Object.ObjectType snake_type;
+    private ArrayList<BoardElement> body;
+    BoardElement tail_previous_pos;
+    BoardElement.Type snake_type;
     Snake_board board;
 
     public Snake(Snake_board board) {
-        snake_type = Object.ObjectType.USER_SNAKE;
+        snake_type = BoardElement.Type.USER_SNAKE;
         direction = SnakeMovement.RIGHT;
-
-        int top_left_x = board.generateSnakeStart_x();
-        int top_left_y = board.generateSnakeStart_y();
-        this.grid_size = board.getGrid();
-        for (int i = 0; i < 4; ++i) {
-            body.add(new Object(
-                    top_left_x - grid_size * i,
-                    top_left_y, snake_type)
-            );
-        }
-
         this.board = board;
-        this.board.addObjects(body, snake_type);
+        restart();
     }
 
     public void move() {
         // Update previous tail position
-        Object tail = body.get(body.size() - 1);
-        tail_previous_pos = new Object(
+        BoardElement tail = body.get(body.size() - 1);
+        tail_previous_pos = new BoardElement(
                 tail.getTopLeft_x(),
                 tail.getTopLeft_y(), snake_type);
 
@@ -96,7 +85,7 @@ public class Snake {
 
     public boolean checkCollision() {
         for (int i = 1; i < body.size(); ++i) {
-            if (Object.intersect(body.get(0), body.get(i))) {
+            if (BoardElement.intersect(body.get(0), body.get(i))) {
                 return true;
             }
         }
@@ -104,8 +93,26 @@ public class Snake {
         return  false;
     }
 
-    public ArrayList<Object> getBody() {
+    public ArrayList<BoardElement> getBody() {
         return this.body;
+    }
+
+    @Override
+    public void restart() {
+        body = new ArrayList<BoardElement>();
+
+        int top_left_x = board.generateSnakeStart_x();
+        int top_left_y = board.generateSnakeStart_y();
+        this.grid_size = board.getGrid();
+        for (int i = 0; i < 4; ++i) {
+            body.add(new BoardElement(
+                    top_left_x - grid_size * i,
+                    top_left_y, snake_type)
+            );
+        }
+
+        direction = SnakeMovement.RIGHT;
+        board.addObjects(body, snake_type);
     }
 
 }
