@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.Key;
 
 public class SnakeBoard extends JFrame implements KeyListener {
     private JPanel mainPanel;
@@ -12,12 +11,15 @@ public class SnakeBoard extends JFrame implements KeyListener {
     private JLabel score;
 
     private JLabel game_over;
-    GameThread game;
+    SnakeGame game;
     GameGUI gui;
     Snake_board game_board;
 
     private volatile boolean restart_clicked;
 
+    /**
+     * Snake board constructor
+     */
     public SnakeBoard() {
         startANewGameButton.addActionListener(new ActionListener() {
             @Override
@@ -35,7 +37,7 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
         game_board = new Snake_board(650, 650, 25);
         gui = new GameGUI(game_board, 15, 50);
-        game = new GameThread(game_board);
+        game = new SnakeGame(game_board);
 
         getContentPane().add(gui);
         gui.setLayout(null);
@@ -54,11 +56,17 @@ public class SnakeBoard extends JFrame implements KeyListener {
         gui.add(score);
     }
 
+    /**
+     * Start game
+     */
     public void startGame() {
         game.start();
         gui.redraw();
     }
 
+    /**
+     * Game loop
+     */
     public void runGameLoop() {
         while (true) {
             game.move();

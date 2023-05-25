@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 
+/**
+ * Class represents Snake
+ */
 public class Snake implements GameBaseObject{
     public enum SnakeMovement{
         UP, DOWN, LEFT, RIGHT
@@ -11,6 +14,10 @@ public class Snake implements GameBaseObject{
     BoardElement.Type snake_type;
     Snake_board board;
 
+    /**
+     * Snake constructor
+     * @param board game board
+     */
     public Snake(Snake_board board) {
         snake_type = BoardElement.Type.USER_SNAKE;
         direction = SnakeMovement.RIGHT;
@@ -18,6 +25,9 @@ public class Snake implements GameBaseObject{
         restart();
     }
 
+    /**
+     * Snake moves by current direction
+     */
     public void move() {
         // Update previous tail position
         BoardElement tail = body.get(body.size() - 1);
@@ -49,6 +59,11 @@ public class Snake implements GameBaseObject{
         }
     }
 
+    /**
+     * Move snake head
+     * @param x position x
+     * @param y position y
+     */
     private void moveHead(int x, int y) {
         if (this.body.get(0).getTopLeft_x() + x > board.getHeight() - grid_size) {
             x = -board.getHeight() + grid_size;
@@ -64,25 +79,40 @@ public class Snake implements GameBaseObject{
         this.body.get(0).move(x, y);
     }
 
+    /**
+     * Increase the length of the snake
+     */
     public void grow() {
         synchronized (board) {
             body.add(tail_previous_pos);
-            board.addObject(body.get(body.size() - 1), snake_type);
+            board.addElement(body.get(body.size() - 1), snake_type);
         }
     }
 
+    /**
+     * Set snake direction
+     * @param direction direction
+     */
     public void setDirection(SnakeMovement direction) {
         synchronized (this.direction) {
             this.direction = direction;
         }
     }
 
+    /**
+     * Get snake direction
+     * @return direction
+     */
     public SnakeMovement getDirection() {
         synchronized (this.direction) {
             return this.direction;
         }
     }
 
+    /**
+     * Check if the snake head collides with the snake body.
+     * @return true - collision occurs, false - no collision
+     */
     public boolean checkCollision() {
         for (int i = 1; i < body.size(); ++i) {
             if (BoardElement.intersect(body.get(0), body.get(i))) {
@@ -93,10 +123,9 @@ public class Snake implements GameBaseObject{
         return  false;
     }
 
-    public ArrayList<BoardElement> getBody() {
-        return this.body;
-    }
-
+    /**
+     * Restart snake
+     */
     @Override
     public void restart() {
         body = new ArrayList<BoardElement>();
@@ -112,7 +141,7 @@ public class Snake implements GameBaseObject{
         }
 
         direction = SnakeMovement.RIGHT;
-        board.addObjects(body, snake_type);
+        board.addElements(body, snake_type);
     }
 
 }

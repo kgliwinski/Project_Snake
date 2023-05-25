@@ -1,10 +1,23 @@
 import java.util.ArrayList;
 
+/**
+ * Class represent fruit
+ */
 public class Fruits implements GameBaseObject{
+    /**
+     * Stores fruits elements
+     */
     private ArrayList<BoardElement> boardElements;
+
     protected Snake_board board;
     private BoardElement.Type type;
     protected int number_of_fruits;
+
+    /**
+     * Fruits constructor
+     * @param board snake game board
+     * @param number_of_fruits number of fruits to create
+     */
     public Fruits(Snake_board board, int number_of_fruits) {
         type = BoardElement.Type.FRUIT;
         this.board = board;
@@ -12,15 +25,19 @@ public class Fruits implements GameBaseObject{
         restart();
     }
 
-    public void addFruit() {
-        boardElements.add(new BoardElement(
-                board.generatePosition_x(),
-                board.generatePosition_y(),
-                type
-        ));
-        board.addObject(boardElements.get(boardElements.size() - 1), type);
-    }
+//    public void addFruit() {
+//        boardElements.add(new BoardElement(
+//                board.generatePosition_x(),
+//                board.generatePosition_y(),
+//                type
+//        ));
+//        board.addObject(boardElements.get(boardElements.size() - 1), type);
+//    }
 
+    /**
+     * Generate new position for fruits with this index
+     * @param index index of fruit in ArrayList
+     */
     public void changePosition(int index) {
         synchronized (board) {
             BoardElement temp = boardElements.get(index);
@@ -31,12 +48,9 @@ public class Fruits implements GameBaseObject{
         }
     }
 
-    public ArrayList<BoardElement> getFruits() {
-        synchronized (board) {
-            return boardElements;
-        }
-    }
-
+    /**
+     * Restart fruits
+     */
     @Override
     public void restart() {
         boardElements = new ArrayList<>();
@@ -48,6 +62,6 @@ public class Fruits implements GameBaseObject{
             ));
         }
 
-        board.addObjects(boardElements, type);
+        board.addElements(boardElements, type);
     }
 }

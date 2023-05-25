@@ -1,11 +1,33 @@
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Game graphic user interface
+ */
 public class GameGUI extends JPanel {
     private Snake_board board;
+
+    /**
+     * Board grid
+     */
     private int grid;
+
+    /**
+     * Board display X offset
+     */
     private int position_x;
+
+    /**
+     * Board display Y offset
+     */
     private int position_y;
+
+    /**
+     * Game GUI constructor
+     * @param board game board
+     * @param position_x board display x offset
+     * @param position_y board display y offset
+     */
     public GameGUI(Snake_board board, int position_x, int position_y) {
         this.board = board;
         this.grid = board.getGrid();
@@ -14,9 +36,17 @@ public class GameGUI extends JPanel {
         setBackground(new Color(50, 50, 50));
     }
 
+    /**
+     * Redraw gui
+     */
     public void redraw() {
         repaint();
     }
+
+    /**
+     * Draw GUI elements
+     * @param g graphics
+     */
     public void drawGame(Graphics g) {
         Graphics2D graphics = (Graphics2D) g;
 
@@ -78,6 +108,10 @@ public class GameGUI extends JPanel {
         }
     }
 
+    /**
+     * Paint components
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

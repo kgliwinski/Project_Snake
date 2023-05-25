@@ -1,8 +1,18 @@
 import java.util.ArrayList;
 
+/**
+ * This class extends Fruits class
+ */
 public class FruitsThread extends Fruits implements Runnable{
     private int change_position_time;
     private ArrayList<Long> timers_start_time;
+
+    /**
+     * Constructor of Fruits Thread
+     * @param board
+     * @param number_of_fruits
+     * @param change_position_time
+     */
     public FruitsThread(Snake_board board, int number_of_fruits, int change_position_time) {
         super(board, number_of_fruits);
         this.change_position_time = change_position_time;
@@ -14,6 +24,9 @@ public class FruitsThread extends Fruits implements Runnable{
         }
     }
 
+    /**
+     * Thread loop
+     */
     @Override
     public void run() {
         for (Long tim: timers_start_time) {
@@ -39,19 +52,26 @@ public class FruitsThread extends Fruits implements Runnable{
         }
     }
 
-    @Override
-    public void addFruit() {
-        super.addFruit();
-        Long time = System.currentTimeMillis();
-        timers_start_time.add(time);
-    }
+//    @Override
+//    public void addFruit() {
+//        super.addFruit();
+//        Long time = System.currentTimeMillis();
+//        timers_start_time.add(time);
+//    }
 
+    /**
+     * Change fruit position and reset timer
+     * @param index index of fruit in ArrayList
+     */
     @Override
     public void changePosition(int index) {
         super.changePosition(index);
         timers_start_time.set(index, System.currentTimeMillis());
     }
 
+    /**
+     * Restart thread
+     */
     @Override
     public void restart() {
         super.restart();

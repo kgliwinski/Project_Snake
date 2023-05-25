@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Obstacle class
+ */
 public class Obstacle {
-//    public Obstacle(Snake_board board) {
-//        board.addObjects(generateObstacle(board), Object.Type.OBSTACLE);
-//    }
-
+    /**
+     * Generate random obstacle
+     * @param board game board
+     */
     static public void generateObstacle(Snake_board board) {
         ArrayList<BoardElement> obstacle = new ArrayList<>();
         Random rand = new Random();
@@ -18,9 +21,14 @@ public class Obstacle {
                 generateLShape(board, obstacle);
                 break;
         }
-        board.addObjects(obstacle, BoardElement.Type.OBSTACLE);
+        board.addElements(obstacle, BoardElement.Type.OBSTACLE);
     }
 
+    /**
+     * Generate line shape obstacle
+     * @param board game board
+     * @param obstacle array to store obstacle position
+     */
     static private void generateLineShape(Snake_board board, ArrayList<BoardElement> obstacle) {
         Random rand = new Random();
         int grid = board.getGrid();
@@ -56,6 +64,11 @@ public class Obstacle {
         }
     }
 
+    /**
+     * Generate L-shape obstacle
+     * @param board game board
+     * @param obstacle array to store obstacle position
+     */
     static private void generateLShape(Snake_board board, ArrayList<BoardElement> obstacle) {
         Random rand = new Random();
         int grid = board.getGrid();
