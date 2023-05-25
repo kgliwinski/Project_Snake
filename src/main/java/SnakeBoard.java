@@ -113,14 +113,14 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
         if (c == 32) {
             restart_clicked = true;
-        } else if (c == 39 && !game.getSnakeDirection().equals(Snake.SnakeMovement.LEFT)) {
-            this.game.setSnakeDirection(Snake.SnakeMovement.RIGHT);
-        } else if (c == 37 && !game.getSnakeDirection().equals(Snake.SnakeMovement.RIGHT)) {
-            this.game.setSnakeDirection(Snake.SnakeMovement.LEFT);
-        } else if (c == 38 && !game.getSnakeDirection().equals(Snake.SnakeMovement.DOWN)) {
-            this.game.setSnakeDirection(Snake.SnakeMovement.UP);
-        } else if (c == 40 && !game.getSnakeDirection().equals(Snake.SnakeMovement.UP)) {
-            this.game.setSnakeDirection(Snake.SnakeMovement.DOWN);
+        } else if (c == 39 && !game.getUsrSnakeDirection().equals(Snake.SnakeMovement.LEFT)) {
+            this.game.setUsrSnakeDirection(Snake.SnakeMovement.RIGHT);
+        } else if (c == 37 && !game.getUsrSnakeDirection().equals(Snake.SnakeMovement.RIGHT)) {
+            this.game.setUsrSnakeDirection(Snake.SnakeMovement.LEFT);
+        } else if (c == 38 && !game.getUsrSnakeDirection().equals(Snake.SnakeMovement.DOWN)) {
+            this.game.setUsrSnakeDirection(Snake.SnakeMovement.UP);
+        } else if (c == 40 && !game.getUsrSnakeDirection().equals(Snake.SnakeMovement.UP)) {
+            this.game.setUsrSnakeDirection(Snake.SnakeMovement.DOWN);
         }
     }
 

@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * AI Snake Thread, extends Snake Thread class
@@ -12,4 +13,6 @@ public class AISnakeThread extends SnakeThread {
     public AISnakeThread(Snake_board board) {
         super(board);
     }
+
+
 }

@@ -124,6 +124,14 @@ public class Snake_board implements GameBaseObject {
         return board_height/2;
     }
 
+    public int generateAiSnakeStart_x(){
+        return board_width / 4;
+    }
+
+    public int generateAiSnakeStart_y(){
+        return board_height / 4;
+    }
+
     /**
      * Add elements to board
      * @param boardElements elements to be added

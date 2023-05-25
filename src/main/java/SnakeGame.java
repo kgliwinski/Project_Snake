@@ -6,10 +6,11 @@ public class SnakeGame {
     private Thread snake_thread;
     private FruitsThread fruit;
     private Thread fruit_thread;
+    private AISnake snake_ai;
+    private Thread ai_snake_thread;
     private volatile int score;
 
     /**
-     * Snake game constructor
      * @param board game board
      */
     public SnakeGame(Snake_board board) {
@@ -18,6 +19,9 @@ public class SnakeGame {
         snake_thread = new Thread(snake_usr);
         fruit = new FruitsThread(board, 3,5000);
         fruit_thread = new Thread(fruit);
+        snake_ai = new AISnake(board);
+        ai_snake_thread = new Thread(snake_ai);
+
         Obstacle.generateObstacle(board);
         Obstacle.generateObstacle(board);
         score = 0;
@@ -28,6 +32,7 @@ public class SnakeGame {
      */
     public void start() {
         snake_thread.start();
+        ai_snake_thread.start();
         fruit_thread.start();
     }
 
@@ -56,7 +61,7 @@ public class SnakeGame {
         if (checkCollisionWithObstacle() == true) {
             return  true;
         }
-        return snake_usr.checkCollision();
+        return snake_usr.checkCollision() || snake_ai.checkCollision();
     }
 
     /**
@@ -77,20 +82,30 @@ public class SnakeGame {
 
     private synchronized boolean checkCollisionWithObstacle() {
         BoardElement snake_head = board.getElements(BoardElement.Type.USER_SNAKE).get(0);
+        BoardElement ai_snake_head = board.getElements(BoardElement.Type.AI_SNAKE).get(0);
         ArrayList<BoardElement> obstacle_boardElements = board.getElements(BoardElement.Type.OBSTACLE);
         for (BoardElement obj : obstacle_boardElements) {
             if (BoardElement.intersect(obj, snake_head)) {
+                return true;
+            }
+            else if (BoardElement.intersect(obj, ai_snake_head)){
                 return true;
             }
         }
         return  false;
     }
 
-    public Snake.SnakeMovement getSnakeDirection() {
+    public Snake.SnakeMovement getUsrSnakeDirection() {
         return snake_usr.getDirection();
     }
-    public void setSnakeDirection(Snake.SnakeMovement direction) {
+    public void setUsrSnakeDirection(Snake.SnakeMovement direction) {
         snake_usr.setDirection(direction);
+    }
+
+    public Snake.SnakeMovement getAiSnakeDirection() {return snake_ai.getDirection();}
+
+    public void setAiSnakeDirection() {
+        snake_ai.setDirection();
     }
 
     public int getScore() {
@@ -100,6 +115,7 @@ public class SnakeGame {
     public void restartGame() {
         board.restart();
         snake_usr.restart();
+        snake_ai.restart();
         fruit.restart();
 
         Obstacle.generateObstacle(board);
