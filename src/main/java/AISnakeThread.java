@@ -12,6 +12,7 @@ public class AISnakeThread extends SnakeThread {
      */
     public AISnakeThread(Snake_board board) {
         super(board);
+        this.snake_type = BoardElement.Type.AI_SNAKE;
     }
 
 

@@ -125,11 +125,11 @@ public class Snake_board implements GameBaseObject {
     }
 
     public int generateAiSnakeStart_x(){
-        return board_width / 4;
+        return grid * 5;
     }
 
     public int generateAiSnakeStart_y(){
-        return board_height / 4;
+        return grid * 5;
     }
 
     /**

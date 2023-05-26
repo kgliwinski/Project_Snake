@@ -9,7 +9,7 @@ public class Snake implements GameBaseObject{
     }
     int grid_size;
     SnakeMovement direction;
-    private ArrayList<BoardElement> body;
+    protected ArrayList<BoardElement> body;
     BoardElement tail_previous_pos;
     BoardElement.Type snake_type;
     Snake_board board;

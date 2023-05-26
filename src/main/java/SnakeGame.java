@@ -15,12 +15,13 @@ public class SnakeGame {
      */
     public SnakeGame(Snake_board board) {
         this.board = board;
+        snake_ai = new AISnake(board);
+        ai_snake_thread = new Thread(snake_ai);
         snake_usr = new UserSnake(board);
         snake_thread = new Thread(snake_usr);
         fruit = new FruitsThread(board, 3,5000);
         fruit_thread = new Thread(fruit);
-        snake_ai = new AISnake(board);
-        ai_snake_thread = new Thread(snake_ai);
+
 
         Obstacle.generateObstacle(board);
         Obstacle.generateObstacle(board);
@@ -35,12 +36,17 @@ public class SnakeGame {
         ai_snake_thread.start();
         fruit_thread.start();
     }
-
+    static int p = 0;
     /**
      * Perform one move, includes 100 millis delay
      */
     public void move() {
         synchronized (board) {
+            if(p == 3){
+                snake_ai.setDirection();
+                p = 0;
+            }
+            p++;
             board.notifyAll();
         }
 
@@ -50,7 +56,7 @@ public class SnakeGame {
             e.printStackTrace();
         }
 
-        checkUserSnakeEating();
+        checkUserAndAISnakeEating();
     }
 
     /**
@@ -61,14 +67,15 @@ public class SnakeGame {
         if (checkCollisionWithObstacle() == true) {
             return  true;
         }
-        return snake_usr.checkCollision() || snake_ai.checkCollision();
+        return snake_usr.checkCollision(); // || snake_ai.checkCollision();
     }
 
     /**
      * Check that user snake ate fruit
      */
-    private synchronized void checkUserSnakeEating() {
+    private synchronized void checkUserAndAISnakeEating() {
         BoardElement snake_head = board.getElements(BoardElement.Type.USER_SNAKE).get(0);
+        BoardElement ai_snake_head = board.getElements(BoardElement.Type.AI_SNAKE).get(0);
         ArrayList<BoardElement> fruits = board.getElements(BoardElement.Type.FRUIT);
         for (int i = 0; i < fruits.size(); ++i) {
             if (BoardElement.intersect(snake_head, fruits.get(i))) {
@@ -77,19 +84,29 @@ public class SnakeGame {
                 score += 1;
                 return;
             }
+            if (BoardElement.intersect(ai_snake_head, fruits.get(i))) {
+                fruit.changePosition(i);
+                snake_ai.grow();
+                return;
+            }
         }
     }
 
     private synchronized boolean checkCollisionWithObstacle() {
-        BoardElement snake_head = board.getElements(BoardElement.Type.USER_SNAKE).get(0);
-        BoardElement ai_snake_head = board.getElements(BoardElement.Type.AI_SNAKE).get(0);
+        ArrayList<BoardElement> usr_snake = board.getElements(BoardElement.Type.USER_SNAKE);
+        BoardElement snake_head = usr_snake.get(0);
+        ArrayList<BoardElement> ai_snake = board.getElements(BoardElement.Type.AI_SNAKE);
         ArrayList<BoardElement> obstacle_boardElements = board.getElements(BoardElement.Type.OBSTACLE);
         for (BoardElement obj : obstacle_boardElements) {
             if (BoardElement.intersect(obj, snake_head)) {
                 return true;
             }
-            else if (BoardElement.intersect(obj, ai_snake_head)){
-                return true;
+        }
+        for (BoardElement ai_snake_part : ai_snake){
+            for (BoardElement snake_part : usr_snake){
+                if (BoardElement.intersect(ai_snake_part, snake_part)){
+                    return true;
+                }
             }
         }
         return  false;
@@ -110,6 +127,10 @@ public class SnakeGame {
 
     public int getScore() {
         return score;
+    }
+
+    public void eraseAISnake(){
+
     }
 
     public void restartGame() {
