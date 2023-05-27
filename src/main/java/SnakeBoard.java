@@ -98,14 +98,26 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
     }
 
+    /**
+     * Event to be processed upon typing a key
+     * @param e the event to be processed
+     */
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
+    /**
+     * Event to be processed upon releasing a key
+     * @param e the event to be processed
+     */
     @Override
     public void keyReleased(KeyEvent e) {
     }
 
+    /**
+     * Generally, the WSAD steering of usr snake
+     * @param e the event to be processed
+     */
     @Override
     public void keyPressed(KeyEvent e) {
 

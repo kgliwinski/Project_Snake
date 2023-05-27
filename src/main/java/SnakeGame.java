@@ -92,6 +92,10 @@ public class SnakeGame {
         }
     }
 
+    /**
+     * Checks if the user snake collided with obstacles or with the AI snake
+     * @return True if the user snake collided
+     */
     private synchronized boolean checkCollisionWithObstacle() {
         ArrayList<BoardElement> usr_snake = board.getElements(BoardElement.Type.USER_SNAKE);
         BoardElement snake_head = usr_snake.get(0);
@@ -112,27 +116,46 @@ public class SnakeGame {
         return  false;
     }
 
+    /**
+     * Gets the direction of user snake
+     * @return the direction uf user snake
+     */
     public Snake.SnakeMovement getUsrSnakeDirection() {
         return snake_usr.getDirection();
     }
+
+    /**
+     * Sets the direction of user snake
+     * @param direction - direction to be set
+     */
     public void setUsrSnakeDirection(Snake.SnakeMovement direction) {
         snake_usr.setDirection(direction);
     }
 
+    /**
+     * Gets the direction of ai snake
+     * @return the direction of ai snake
+     */
     public Snake.SnakeMovement getAiSnakeDirection() {return snake_ai.getDirection();}
 
+    /**
+     * Sets the direction of ai snake - ai generated
+     */
     public void setAiSnakeDirection() {
         snake_ai.setDirection();
     }
 
+    /**
+     * Get score
+     * @return score
+     */
     public int getScore() {
         return score;
     }
 
-    public void eraseAISnake(){
-
-    }
-
+    /**
+     * Restart the game
+     */
     public void restartGame() {
         board.restart();
         snake_usr.restart();

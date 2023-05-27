@@ -24,6 +24,13 @@ public class AISnake extends AISnakeThread {
         }
     }
 
+    /**
+     * calculates the distance of an element and x,y coordinates
+     * @param element - element
+     * @param x - x coordinate
+     * @param y - y coordinate
+     * @return distance
+     */
     private int calculateElementDistance(BoardElement element, int x, int y) {
         return (int) Math.sqrt(Math.pow(element.getTopLeft_x() - x, 2) + Math.pow(element.getTopLeft_y() - y, 2));
     }
@@ -89,7 +96,9 @@ public class AISnake extends AISnakeThread {
         return SnakeMovement.RIGHT;
     }
 
-    //    @Override
+    /**
+     * sets direction of the AI snake
+     */
     public void setDirection() {
         System.out.println("Set AI Snake direction");
         synchronized (this.direction) {
@@ -97,6 +106,9 @@ public class AISnake extends AISnakeThread {
         }
     }
 
+    /**
+     * @brief restarts the AISnake
+     */
     @Override
     public void restart() {
         body = new ArrayList<BoardElement>();
