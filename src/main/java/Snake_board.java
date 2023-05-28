@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
+import java.util.Map;
 
 /**
  * Class represents snake game board
@@ -107,6 +109,28 @@ public class Snake_board implements GameBaseObject {
 
         return new_y;
     }
+
+    public synchronized Map<String, Integer> generateFrogPosition(int curPos_x, int curPos_y){
+        Random rand = new Random();
+        ArrayList<BoardElement> boardElements = getAllObjects();
+
+
+        Map<String, Integer> retMap = new HashMap<>();
+        if (rand.nextInt(2) == 0){
+            retMap.put("x", curPos_x + grid);
+        }
+        else{
+            retMap.put("x", curPos_x - grid);
+        }
+        if (rand.nextInt(2) == 0){
+            retMap.put("y", curPos_y + grid);
+        }
+        else{
+            retMap.put("y", curPos_y - grid);
+        }
+        return retMap;
+    }
+
 
     /**
      * Generate snake starting top left x position

@@ -25,14 +25,6 @@ public class Fruits implements GameBaseObject{
         restart();
     }
 
-//    public void addFruit() {
-//        boardElements.add(new BoardElement(
-//                board.generatePosition_x(),
-//                board.generatePosition_y(),
-//                type
-//        ));
-//        board.addObject(boardElements.get(boardElements.size() - 1), type);
-//    }
 
     /**
      * Generate new position for fruits with this index

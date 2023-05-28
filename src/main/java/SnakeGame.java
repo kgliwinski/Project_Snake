@@ -6,6 +6,11 @@ public class SnakeGame {
     private Thread snake_thread;
     private FruitsThread fruit;
     private Thread fruit_thread;
+
+    private FrogsThread frogs;
+
+    private Thread frogs_thread;
+
     private AISnake snake_ai;
     private Thread ai_snake_thread;
     private volatile int score;
@@ -22,6 +27,9 @@ public class SnakeGame {
         fruit = new FruitsThread(board, 3,5000);
         fruit_thread = new Thread(fruit);
 
+        frogs = new FrogsThread(board, 3, 3000);
+        frogs_thread = new Thread(frogs);
+
 
         Obstacle.generateObstacle(board);
         Obstacle.generateObstacle(board);
@@ -35,6 +43,7 @@ public class SnakeGame {
         snake_thread.start();
         ai_snake_thread.start();
         fruit_thread.start();
+        frogs_thread.start();
     }
     static int p = 0;
     /**
@@ -77,6 +86,7 @@ public class SnakeGame {
         BoardElement snake_head = board.getElements(BoardElement.Type.USER_SNAKE).get(0);
         BoardElement ai_snake_head = board.getElements(BoardElement.Type.AI_SNAKE).get(0);
         ArrayList<BoardElement> fruits = board.getElements(BoardElement.Type.FRUIT);
+        ArrayList<BoardElement> frogs_list = board.getElements(BoardElement.Type.FROG);
         for (int i = 0; i < fruits.size(); ++i) {
             if (BoardElement.intersect(snake_head, fruits.get(i))) {
                 fruit.changePosition(i);
@@ -88,6 +98,13 @@ public class SnakeGame {
                 fruit.changePosition(i);
                 snake_ai.grow();
                 return;
+            }
+        }
+        for (int i = 0; i < frogs_list.size(); ++i){
+            if(BoardElement.intersect(snake_head, frogs_list.get(i))){
+                frogs.changePosition(i);
+                snake_usr.grow();
+                score += 3;
             }
         }
     }
@@ -115,6 +132,8 @@ public class SnakeGame {
         }
         return  false;
     }
+
+
 
     /**
      * Gets the direction of user snake
@@ -161,6 +180,7 @@ public class SnakeGame {
         snake_usr.restart();
         snake_ai.restart();
         fruit.restart();
+        frogs.restart();
 
         Obstacle.generateObstacle(board);
         Obstacle.generateObstacle(board);
