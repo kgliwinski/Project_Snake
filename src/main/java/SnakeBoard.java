@@ -1,14 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 public class SnakeBoard extends JFrame implements KeyListener {
+    public static final String top_score_path = "topScore.txt";
     private JPanel mainPanel;
     private JButton startANewGameButton;
     private JLabel snakeInitialLabel;
     private JTextPane snakeBoardInitialScreenTextPane;
 
     private JLabel score;
+
+    private JLabel topScore;
 
     private JLabel game_over;
     SnakeGame game;
@@ -47,6 +51,12 @@ public class SnakeBoard extends JFrame implements KeyListener {
         score.setForeground(Color.WHITE);
         score.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 
+        topScore = new JLabel("Top score");
+        topScore.setHorizontalAlignment(SwingConstants.RIGHT);
+        topScore.setBounds(0, 0, 400, 50);
+        topScore.setForeground(Color.WHITE);
+        topScore.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+
         game_over = new JLabel();
         game_over.setHorizontalAlignment(SwingConstants.CENTER);
         game_over.setBounds(0, 100, 700, 50);
@@ -54,24 +64,67 @@ public class SnakeBoard extends JFrame implements KeyListener {
         game_over.setFont(new Font("Comic Sans MS", Font.BOLD, 40));
 
         gui.add(score);
+        gui.add(topScore);
+    }
+
+    /**
+     * Creates a new file with (0) if no topScore file exists
+     * @throws IOException
+     */
+    public void createTopScoreFile() throws IOException {
+        FileWriter myWriter = new FileWriter(top_score_path);
+        myWriter.write("0");
+        myWriter.close();
+    }
+
+    /**
+     * writes new top score to file
+     * @param score - score to be written
+     * @throws IOException
+     */
+    public void writeTopScore(int score) throws IOException {
+        FileWriter myWriter = new FileWriter(top_score_path);
+        myWriter.write(Integer.toString(score));
+        myWriter.close();
+    }
+
+    /**
+     * reads top score from file
+     * @return top score integer
+     * @throws IOException
+     */
+    public int readTopScore() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(top_score_path));
+        int topScore = Integer.parseInt(reader.readLine());
+        reader.close();
+        return topScore;
     }
 
     /**
      * Start game
      */
-    public void startGame() {
+    public void startGame() throws IOException {
+        File f = new File(top_score_path);
+        if (!f.exists() && !f.isDirectory()) {
+            createTopScoreFile();
+        }
         game.start();
+        topScore.setText("Top Score: " + readTopScore());
         gui.redraw();
     }
 
     /**
      * Game loop
      */
-    public void runGameLoop() {
+    public void runGameLoop() throws IOException {
         while (true) {
             game.move();
             score.setText("Score: " + Integer.toString(game.getScore()));
             if (game.checkEnd() == true) {
+                if (game.getScore() > readTopScore()) {
+                    writeTopScore(game.getScore());
+                }
+                topScore.setText("Top Score: " + readTopScore());
                 game_over.setText("GAME OVER");
                 gui.add(game_over);
                 gui.redraw();
@@ -86,7 +139,7 @@ public class SnakeBoard extends JFrame implements KeyListener {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         SnakeBoard board = new SnakeBoard();
 
@@ -100,6 +153,7 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
     /**
      * Event to be processed upon typing a key
+     *
      * @param e the event to be processed
      */
     @Override
@@ -108,6 +162,7 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
     /**
      * Event to be processed upon releasing a key
+     *
      * @param e the event to be processed
      */
     @Override
@@ -116,6 +171,7 @@ public class SnakeBoard extends JFrame implements KeyListener {
 
     /**
      * Generally, the WSAD steering of usr snake
+     *
      * @param e the event to be processed
      */
     @Override
